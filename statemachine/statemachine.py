@@ -356,6 +356,12 @@ class BaseStateMachine(object):
             bounded_on_enter_specific_state_event()
 
         self.current_state = destination
+
+        bounded_post_event = getattr(
+            self, 'post_{}'.format(destination.identifier), None)
+        if callable(bounded_post_event):
+            bounded_post_event()
+
         return result
 
     def get_transition(self, transition_identifier):
